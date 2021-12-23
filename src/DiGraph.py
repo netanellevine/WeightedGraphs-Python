@@ -5,7 +5,9 @@ from src.GraphInterface import GraphInterface
 # position tuple
 # weight float
 from src.node_data import node_data
+"""
 
+"""
 
 class DiGraph(GraphInterface):
 
@@ -70,5 +72,5 @@ class DiGraph(GraphInterface):
 
     def __repr__(self) -> str:
         ans = """Graph: |V| = {}, |E| = {},
-        nodes_data: {}""".format(self.v_size(), self._e_size, self._nodes)
+        nodes_data:[\n\t {}]""".format(self.v_size(), self._e_size, self._nodes)
         return ans
