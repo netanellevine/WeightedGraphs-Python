@@ -1,3 +1,6 @@
+import json
+
+
 class node_data:
 
     def __init__(self, id: int, pos: tuple[float, float, float]):
@@ -8,9 +11,9 @@ class node_data:
         self._size: int = 0
 
     def connect(self, src: int, dest: int, weight: float):
-        if not self._in_edges.get(src):
+        if src in self._in_edges:
             self._in_edges[src] = weight
-        elif not self._out_edges.get(dest):
+        elif dest in self._out_edges:
             self._out_edges[dest] = weight
         self._size += 1
 
@@ -40,3 +43,20 @@ class node_data:
     def size(self):
         return self._size
 
+    def __str__(self) -> str:
+        ans = """node_data ID: {}, pos: {}
+        edges_in: {}
+        edges_out: {}""".format(self.id, self._pos, len(self._in_edges), len(self._out_edges))
+        return ans
+
+    def in_edges_str(self):
+        ans = "{"
+        for src, weight in self._in_edges:
+            ans += "{}: {},\n".format(src, weight)
+        return ans
+
+    def out_edges_str(self):
+        ans = "{"
+        for dest, weight in self._out_edges:
+            ans += "{}: {},\n".format(dest, weight)
+        return ans

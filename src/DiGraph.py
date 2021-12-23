@@ -1,6 +1,5 @@
 from src.GraphInterface import GraphInterface
 
-
 # out edges <int dest,weight>
 # in edges <int source,weight>
 # position tuple
@@ -34,28 +33,42 @@ class DiGraph(GraphInterface):
         return self._mc
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
-        pass
+        if (id1 and id2) in self._nodes:
+            n1 = self._nodes.get(id1)
+            n2 = self._nodes.get(id2)
+            if id2 not in n1.out_edges() and id1 not in n2.in_edges():
+                n1.out_edges()[id2] = weight
+                n2.in_edges()[id1] = weight
+                self._e_size += 1
+                return True
+        return False
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
-        if not self._nodes.get(node_id):
+        if node_id not in self._nodes:
             added_node = node_data(node_id, pos)
             self._nodes[node_id] = added_node
             return True
         return False
 
     def remove_node(self, node_id: int) -> bool:
-        if not self._nodes.get(node_id):
+        if node_id not in self._nodes:
             self._nodes.pop(node_id)
             return True
         return False
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
-        if self._nodes.get(node_id1) is not None and self._nodes.get(node_id2) is not None:
-            n = self._nodes.get(node_id1)
-            if n.get_out_edge(node_id2) is not None:
-                n.out_edges().pop(node_id2)
-                n = self._nodes.get(node_id2)
-                if n.get_in_edge(node_id1) is not None:
-                    n.in_edges().pop(node_id1)
-                    return True
+        if (node_id1 and node_id2) in self._nodes:
+            n1 = self._nodes.get(node_id1)
+            n2 = self._nodes.get(node_id2)
+            if node_id1 in n2.in_edges() and node_id2 in n1.out_edges():
+                n1.out_edges().pop(node_id2)
+                n2.in_edges().pop(node_id1)
+                self._e_size -= 1
+                return True
+
         return False
+
+    def __str__(self) -> str:
+        ans = """Graph: |V| = {}, |E| = {},
+        nodes_data: {}""".format(self.v_size(), self._e_size, self._nodes)
+        return ans
