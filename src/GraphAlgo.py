@@ -1,7 +1,10 @@
 import math
 import heapq
+import random
 from typing import List
+import json
 
+from src.DiGraph import DiGraph
 from src.GraphAlgoInterface import GraphAlgoInterface
 from src.GraphInterface import GraphInterface
 
@@ -28,9 +31,30 @@ class GraphAlgo(GraphAlgoInterface):
         return self.graph
 
     def load_from_json(self, file_name: str) -> bool:
+        self.graph = DiGraph()
+        try:
+            f = open(file_name)
+            data = json.load(f)
+            nodes = data["Nodes"]
+            for i in nodes:
+                try:
+                    self.graph.add_node(i["id"], i["pos"].split(","))
+                except:
+                    self.graph.add_node(i["id"], (random.random(32, 32.5), random.random(35, 35.5), 0.0))
+            edges = data["Edges"]
+            for i in edges:
+                self.graph.add_edge(i["src"], i["dest"], (i["w"]))
+        except:
+            return False
         return True
 
     def save_to_json(self, file_name: str) -> bool:
+        try:
+            f = open(file_name, "x")
+            di = self.graph.nodes_to_json()
+            f.write(di)
+        except:
+            return False
         return True
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
@@ -52,8 +76,8 @@ class GraphAlgo(GraphAlgoInterface):
             node_lst.pop(0)
             id2 = node_lst[0]
             if id2 not in route:
-                weight,path = self.shortest_path(last, id2)
-                cost = cost+weight
+                weight, path = self.shortest_path(last, id2)
+                cost = cost + weight
                 for i in path:
                     TSPath.append(i)
                     route[i]
@@ -65,6 +89,7 @@ class GraphAlgo(GraphAlgoInterface):
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         return None
+
     def centerPoint(self) -> (int, float):
         Max = math.inf
         node_id = 0
@@ -88,13 +113,13 @@ class GraphAlgo(GraphAlgoInterface):
             dest = trioT[1].to
             if dest not in di.keys():
                 self.graph.all_in_edges_of_node(dest)
-                di[dest] = Father(trioT.prev, trioT.weight)
-                if trioT.weight > Max:
-                    Max = trioT.weight
+                di[dest] = Father(trioT[1].prev, trioT[1].weight)
+                if trioT[1].weight > Max:
+                    Max = trioT[1].weight
                 edges = self.graph.all_out_edges_of_node(dest)
-                for i in edges.values():
-                    weight = i[1] + trioT.weight
-                    heapq.heappush(prio, (weight, Father(i[0], weight)))
+                for i in edges.keys():
+                    weight = edges.get(i) + trioT[1].weight
+                    heapq.heappush(prio, (weight, Trio(dest, i, weight)))
         return Max
 
     def djikstra_shortest(self, src: int, des: int):
@@ -114,3 +139,9 @@ class GraphAlgo(GraphAlgoInterface):
                     weight = edges.get(i) + trioT[1].weight
                     heapq.heappush(prio, (weight, Trio(dest, i, weight)))
         return None
+
+
+g = DiGraph()
+algo = GraphAlgo(g)
+algo.load_from_json("C:/Users/yanir/PycharmProjects/Weighted_Graph_Algorithms_Py/data/G1.json")
+algo.save_to_json("test.json")
