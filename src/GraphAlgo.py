@@ -42,9 +42,29 @@ class GraphAlgo(GraphAlgoInterface):
             prev = di.get(prev).prev
         return di.get(id2).weight, path
 
+    def find_route(self, node_lst: List[int]):
+        TSPath: List[int] = []
+        route: {int} = {}
+        copy = node_lst.copy()
+        last = node_lst.pop(0)
+        cost = 0
+        while len(node_lst) > 1:
+            node_lst.pop(0)
+            id2 = node_lst[0]
+            if id2 not in route:
+                weight,path = self.shortest_path(last, id2)
+                cost = cost+weight
+                for i in path:
+                    TSPath.append(i)
+                    route[i]
+                last = TSPath[-1]
+        for i in copy:
+            if i not in route.keys():
+                return List[int]
+        return cost, TSPath
+
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         return None
-
     def centerPoint(self) -> (int, float):
         Max = math.inf
         node_id = 0
