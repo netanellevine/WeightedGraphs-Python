@@ -43,10 +43,10 @@ class node_data:
     def size(self):
         return self._size
 
-    def __str__(self) -> str:
-        ans = """node_data ID: {}, pos: {}
-        edges_in: {}
-        edges_out: {}""".format(self.id, self._pos, len(self._in_edges), len(self._out_edges))
+    def __repr__(self) -> str:
+        ans = """node_data ID: {}, pos: {},
+        edges_in: {},
+        edges_out: {},\n""".format(self.id, self._pos, len(self._in_edges), len(self._out_edges))
         return ans
 
     def in_edges_str(self):
