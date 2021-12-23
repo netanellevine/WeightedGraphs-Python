@@ -5,9 +5,7 @@ from src.GraphInterface import GraphInterface
 # position tuple
 # weight float
 from src.node_data import node_data
-"""
 
-"""
 
 class DiGraph(GraphInterface):
 
@@ -22,6 +20,9 @@ class DiGraph(GraphInterface):
     def e_size(self) -> int:
         return self._e_size
 
+    def nodes(self):
+        return self._nodes
+
     def get_all_v(self) -> dict:
         return self._nodes
 
@@ -35,7 +36,7 @@ class DiGraph(GraphInterface):
         return self._mc
 
     def add_edge(self, id1: int, id2: int, weight: float) -> bool:
-        if (id1 and id2) in self._nodes:
+        if id1 in self._nodes and id2 in self._nodes:
             n1 = self._nodes.get(id1)
             n2 = self._nodes.get(id2)
             if id2 not in n1.out_edges() and id1 not in n2.in_edges():
@@ -59,7 +60,7 @@ class DiGraph(GraphInterface):
         return False
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
-        if (node_id1 and node_id2) in self._nodes:
+        if node_id1 in self._nodes and node_id2 in self._nodes:
             n1 = self._nodes.get(node_id1)
             n2 = self._nodes.get(node_id2)
             if node_id1 in n2.in_edges() and node_id2 in n1.out_edges():
@@ -72,5 +73,11 @@ class DiGraph(GraphInterface):
 
     def __repr__(self) -> str:
         ans = """Graph: |V| = {}, |E| = {},
-        nodes_data:[\n\t {}]""".format(self.v_size(), self._e_size, self._nodes)
+        nodes_data:[\n\t {}]""".format(self.v_size(), self.e_size(), self.nodes())
         return ans
+
+    def nodes_to_json(self):
+        nodes_list = []
+        for i in range(self.v_size()):
+            nodes_list.append(set[self.nodes().get(i).node_to_json()])
+        return dict["Nodes": nodes_list]

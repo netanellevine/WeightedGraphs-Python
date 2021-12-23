@@ -1,5 +1,3 @@
-import json
-
 
 class node_data:
 
@@ -49,14 +47,21 @@ class node_data:
         edges_out: {},\n\t""".format(self.id, self._pos, len(self._in_edges), len(self._out_edges))
         return ans
 
-    def in_edges_str(self):
-        ans = "{"
-        for src, weight in self._in_edges:
-            ans += "{}: {},\n".format(src, weight)
-        return ans
+    def node_to_json(self):
+        pos_str = ""
+        for i in self._pos:
+            pos_str += str(i) + ","
+            # print(i)
+        return dict["pos": pos_str[:-1]], dict["id": self.id]
 
-    def out_edges_str(self):
-        ans = "{"
-        for dest, weight in self._out_edges:
-            ans += "{}: {},\n".format(dest, weight)
-        return ans
+    # def in_edges_str(self):
+    #     ans = "{"
+    #     for src, weight in self._in_edges:
+    #         ans += "{}: {},\n".format(src, weight)
+    #     return ans
+    #
+    # def out_edges_str(self):
+    #     ans = "{"
+    #     for dest, weight in self._out_edges:
+    #         ans += "{}: {},\n".format(dest, weight)
+    #     return ans
