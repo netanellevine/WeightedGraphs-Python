@@ -30,9 +30,9 @@ def check0():
     """
     g = DiGraph()  # creates an empty directed graph
     r = lambda: rnd.randint(0, 50)
-    print(r())
+    # print(r())
     for n in range(4):
-        g.add_node(n, (1, 3, 5))
+        g.add_node(n, (r(), r(), r()))
     g.add_edge(0, 1, 1)
     g.add_edge(1, 0, 1.1)
     g.add_edge(1, 2, 1.3)
