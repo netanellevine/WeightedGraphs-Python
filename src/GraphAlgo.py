@@ -40,7 +40,7 @@ class GraphAlgo(GraphAlgoInterface):
         while path[0] != id1:
             path.insert(0, prev)
             prev = di.get(prev).prev
-        return path, di.get(id2).weight
+        return di.get(id2).weight, path
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         return None
@@ -63,9 +63,9 @@ class GraphAlgo(GraphAlgoInterface):
         di: {int, Father} = {}
         Max = 0
         heapq.heappush(prio, (0, Trio(src, src, 0)))
-        while di.size < self.graph.v_size() and len(prio):
-            trioT: Trio = heapq.heappop(prio)
-            dest = trioT.to
+        while len(di) < self.graph.v_size() and len(prio):
+            trioT = heapq.heappop(prio)
+            dest = trioT[1].to
             if dest not in di.keys():
                 self.graph.all_in_edges_of_node(dest)
                 di[dest] = Father(trioT.prev, trioT.weight)
@@ -81,16 +81,16 @@ class GraphAlgo(GraphAlgoInterface):
         prio = []
         di: {int, Father} = {}
         heapq.heappush(prio, (0, Trio(src, src, 0)))
-        while di.size < self.graph.v_size() and len(prio):
-            trioT: Trio = heapq.heappop(prio)
-            dest = trioT.to
+        while len(di) < self.graph.v_size() and len(prio):
+            trioT = heapq.heappop(prio)
+            dest = trioT[1].to
             if dest not in di.keys():
                 self.graph.all_in_edges_of_node(dest)
-                di[dest] = Father(trioT.prev, trioT.weight)
+                di[dest] = Father(trioT[1].prev, trioT[1].weight)
                 edges = self.graph.all_out_edges_of_node(dest)
                 if des in di:
                     return di
-                for i in edges.values():
-                    weight = i[1] + trioT.weight
-                    heapq.heappush(prio, (weight, Father(i[0], weight)))
+                for i in edges.keys():
+                    weight = edges.get(i) + trioT[1].weight
+                    heapq.heappush(prio, (weight, Trio(dest, i, weight)))
         return None
