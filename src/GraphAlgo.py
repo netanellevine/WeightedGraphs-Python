@@ -15,6 +15,9 @@ class Trio:
         self.prev: int = prev
         self.to: int = to
 
+    def __lt__(self, other):
+        return self
+
 
 class Father:
     def __init__(self, prev: int, weight: float):
@@ -30,7 +33,7 @@ def swap(j, i, li):
 
 class GraphAlgo(GraphAlgoInterface):
 
-    def __init__(self, graph: GraphInterface):
+    def __init__(self, graph: GraphInterface = DiGraph()):
         self.graph = graph
 
     def get_graph(self) -> GraphInterface:
@@ -65,6 +68,8 @@ class GraphAlgo(GraphAlgoInterface):
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         di = self.djikstra_shortest(id1, id2)
+        if di is None:
+            return 0, []
         path = [id2]
         prev = di.get(id2).prev
         while path[0] != id1:
@@ -76,48 +81,51 @@ class GraphAlgo(GraphAlgoInterface):
         TSPath: List[int] = []
         route = set()
         copy = node_lst.copy()
-        last = node_lst.pop(0)
+        last = node_lst[0]
         cost = 0
         while len(node_lst) > 1:
             node_lst.pop(0)
             id2 = node_lst[0]
             if id2 not in route:
                 weight, path = self.shortest_path(last, id2)
+                if len(path) == 0:
+                    return TSPath
                 cost = cost + weight
                 for i in path:
-                    TSPath.append(i)
+                    if TSPath.__len__() == 0 or TSPath[-1] != i:
+                        TSPath.append(i)
                     route.add(i)
                 last = TSPath[-1]
         for i in copy:
             if i not in route:
                 return List[int]
-        return cost, TSPath
+        return TSPath  # ,cost
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
-        cities = node_lst
-        if cities is None:
+        if node_lst is None:
             return None
-        f = True;
+        f = True
         Min = math.inf
         fin = []
-        for i in range(0, len(cities)):
-            copy = cities.copy()
+        for i in range(0, len(node_lst)):
+            copy = node_lst.copy()
             swap(0, i, copy)
             copy = self.find_route(copy)
-            if copy is not None and len(copy) >= len(cities):
+            test = copy.__len__()
+            if copy is not None and copy.__len__() >= node_lst.__len__():
                 cost = 0
-                for j in range(0, len(copy)):
-                    edges = self.graph.all_out_edges_of_node(j)
-                    e = edges[j + 1]
+                for j in range(0, copy.__len__()-1):
+                    edges = self.graph.all_out_edges_of_node(copy[j])
+                    e = edges[copy[j+1]]
                     if e is None:
                         f = False
                         break
 
                     else:
-                        cost = cost + e.getWeight()
-                    if cost < Min and f:
-                        Min = cost;
-                        fin = copy;
+                        cost = cost + e
+                if cost < Min and f:
+                    Min = cost
+                    fin = copy
 
                     f = True
 
@@ -173,10 +181,9 @@ class GraphAlgo(GraphAlgoInterface):
                     heapq.heappush(prio, (weight, Trio(dest, i)))
         return None
 
-
-g = DiGraph()
-algo = GraphAlgo(g)
-algo.load_from_json("C:/Users/yanir/PycharmProjects/Weighted_Graph_Algorithms_Py/data/Test1.json")
-start_time = time.time()
-print(algo.centerPoint())
-print("--- %s seconds ---" % (time.time() - start_time))
+# g = DiGraph()
+# algo = GraphAlgo(g)
+# algo.load_from_json("C:/Users/yanir/PycharmProjects/Weighted_Graph_Algorithms_Py/data/Test1.json")
+# start_time = time.time()
+# print(algo.centerPoint())
+# print("--- %s seconds ---" % (time.time() - start_time))
