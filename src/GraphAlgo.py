@@ -1,6 +1,7 @@
 import math
 import heapq
 import random
+import time
 from typing import List
 import json
 
@@ -10,16 +11,21 @@ from src.GraphInterface import GraphInterface
 
 
 class Trio:
-    def __init__(self, prev: int, to: int, weight: float):
+    def __init__(self, prev: int, to: int):
         self.prev: int = prev
         self.to: int = to
-        self.weight: float = weight
 
 
 class Father:
     def __init__(self, prev: int, weight: float):
         self.prev: int = prev
         self.weight: float = weight
+
+
+def swap(j, i, li):
+    tmp = li[j]
+    li[j] = li[i]
+    li[i] = tmp
 
 
 class GraphAlgo(GraphAlgoInterface):
@@ -40,11 +46,11 @@ class GraphAlgo(GraphAlgoInterface):
                 try:
                     self.graph.add_node(i["id"], i["pos"].split(","))
                 except:
-                    self.graph.add_node(i["id"], (random.random(32, 32.5), random.random(35, 35.5), 0.0))
+                    self.graph.add_node(i["id"], (random.random(), random.random(), 0.0))
             edges = data["Edges"]
             for i in edges:
                 self.graph.add_edge(i["src"], i["dest"], (i["w"]))
-        except:
+        except IOError:
             return False
         return True
 
@@ -53,7 +59,7 @@ class GraphAlgo(GraphAlgoInterface):
             f = open(file_name, "x")
             di = self.graph.nodes_to_json()
             f.write(di)
-        except:
+        except IOError:
             return False
         return True
 
@@ -68,7 +74,7 @@ class GraphAlgo(GraphAlgoInterface):
 
     def find_route(self, node_lst: List[int]):
         TSPath: List[int] = []
-        route: {int} = {}
+        route = set()
         copy = node_lst.copy()
         last = node_lst.pop(0)
         cost = 0
@@ -80,15 +86,42 @@ class GraphAlgo(GraphAlgoInterface):
                 cost = cost + weight
                 for i in path:
                     TSPath.append(i)
-                    route[i]
+                    route.add(i)
                 last = TSPath[-1]
         for i in copy:
-            if i not in route.keys():
+            if i not in route:
                 return List[int]
         return cost, TSPath
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
-        return None
+        cities = node_lst
+        if cities is None:
+            return None
+        f = True;
+        Min = math.inf
+        fin = []
+        for i in range(0, len(cities)):
+            copy = cities.copy()
+            swap(0, i, copy)
+            copy = self.find_route(copy)
+            if copy is not None and len(copy) >= len(cities):
+                cost = 0
+                for j in range(0, len(copy)):
+                    edges = self.graph.all_out_edges_of_node(j)
+                    e = edges[j + 1]
+                    if e is None:
+                        f = False
+                        break
+
+                    else:
+                        cost = cost + e.getWeight()
+                    if cost < Min and f:
+                        Min = cost;
+                        fin = copy;
+
+                    f = True
+
+        return fin, Min
 
     def centerPoint(self) -> (int, float):
         Max = math.inf
@@ -107,41 +140,43 @@ class GraphAlgo(GraphAlgoInterface):
         prio = []
         di: {int, Father} = {}
         Max = 0
-        heapq.heappush(prio, (0, Trio(src, src, 0)))
-        while len(di) < self.graph.v_size() and len(prio):
-            trioT = heapq.heappop(prio)
-            dest = trioT[1].to
+        heapq.heappush(prio, (0, Trio(src, src)))
+        while len(di) < self.graph.v_size() and len(prio) > 0:
+            weig, trioT = heapq.heappop(prio)
+            dest = trioT.to
             if dest not in di.keys():
                 self.graph.all_in_edges_of_node(dest)
-                di[dest] = Father(trioT[1].prev, trioT[1].weight)
-                if trioT[1].weight > Max:
-                    Max = trioT[1].weight
+                di[dest] = Father(trioT.prev, weig)
+                if weig > Max:
+                    Max = weig
                 edges = self.graph.all_out_edges_of_node(dest)
                 for i in edges.keys():
-                    weight = edges.get(i) + trioT[1].weight
-                    heapq.heappush(prio, (weight, Trio(dest, i, weight)))
+                    weight = edges.get(i) + weig
+                    heapq.heappush(prio, (weight, Trio(dest, i)))
         return Max
 
     def djikstra_shortest(self, src: int, des: int):
         prio = []
         di: {int, Father} = {}
-        heapq.heappush(prio, (0, Trio(src, src, 0)))
-        while len(di) < self.graph.v_size() and len(prio):
-            trioT = heapq.heappop(prio)
-            dest = trioT[1].to
+        heapq.heappush(prio, (0, Trio(src, src)))
+        while len(di) < self.graph.v_size() and len(prio) > 0:
+            weig, trioT = heapq.heappop(prio)
+            dest = trioT.to
             if dest not in di.keys():
                 self.graph.all_in_edges_of_node(dest)
-                di[dest] = Father(trioT[1].prev, trioT[1].weight)
+                di[dest] = Father(trioT.prev, weig)
                 edges = self.graph.all_out_edges_of_node(dest)
                 if des in di:
                     return di
                 for i in edges.keys():
-                    weight = edges.get(i) + trioT[1].weight
-                    heapq.heappush(prio, (weight, Trio(dest, i, weight)))
+                    weight = edges.get(i) + weig
+                    heapq.heappush(prio, (weight, Trio(dest, i)))
         return None
 
 
 g = DiGraph()
 algo = GraphAlgo(g)
-algo.load_from_json("C:/Users/yanir/PycharmProjects/Weighted_Graph_Algorithms_Py/data/G1.json")
-algo.save_to_json("test.json")
+algo.load_from_json("C:/Users/yanir/PycharmProjects/Weighted_Graph_Algorithms_Py/data/Test1.json")
+start_time = time.time()
+print(algo.centerPoint())
+print("--- %s seconds ---" % (time.time() - start_time))
