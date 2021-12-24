@@ -2,7 +2,7 @@
 class node_data:
 
     def __init__(self, id: int, pos: tuple[float, float, float]):
-        self.id: int = id
+        self._id: int = id
         self._in_edges: dict[int, float] = {}
         self._out_edges: dict[int, float] = {}
         self._pos: tuple[float, float, float] = pos
@@ -41,10 +41,13 @@ class node_data:
     def size(self):
         return self._size
 
+    def id(self):
+        return self._id
+
     def __repr__(self) -> str:
         ans = """node_data ID: {}, pos: {},
         edges_in: {},
-        edges_out: {},\n\t""".format(self.id, self._pos, len(self._in_edges), len(self._out_edges))
+        edges_out: {},\n\t""".format(self._id, self._pos, len(self._in_edges), len(self._out_edges))
         return ans
 
     def node_to_json(self):
@@ -52,7 +55,7 @@ class node_data:
         for i in self._pos:
             pos_str += str(i) + ","
             # print(i)
-        return dict["pos": pos_str[:-1]], dict["id": self.id]
+        return dict["pos": pos_str[:-1]], dict["id": self._id]
 
     # def in_edges_str(self):
     #     ans = "{"

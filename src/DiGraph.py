@@ -43,6 +43,7 @@ class DiGraph(GraphInterface):
                 n1.out_edges()[id2] = weight
                 n2.in_edges()[id1] = weight
                 self._e_size += 1
+                self._mc += 1
                 return True
         return False
 
@@ -50,12 +51,14 @@ class DiGraph(GraphInterface):
         if node_id not in self._nodes:
             added_node = node_data(node_id, pos)
             self._nodes[node_id] = added_node
+            self._mc += 1
             return True
         return False
 
     def remove_node(self, node_id: int) -> bool:
         if node_id not in self._nodes:
             self._nodes.pop(node_id)
+            self._mc += 1
             return True
         return False
 
@@ -67,8 +70,8 @@ class DiGraph(GraphInterface):
                 n1.out_edges().pop(node_id2)
                 n2.in_edges().pop(node_id1)
                 self._e_size -= 1
+                self._mc += 1
                 return True
-
         return False
 
     def __repr__(self) -> str:
