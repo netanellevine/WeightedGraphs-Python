@@ -163,7 +163,9 @@ class GraphAlgo(GraphAlgoInterface):
         Max = math.inf
         node_id = 0
         for i in self.graph.get_all_v().keys():
-            weight = self.djikstra(i)
+            weight = self.djikstra(i,1)
+            if weight==-1:
+                return (None,math.inf)
             if weight < Max:
                 Max = weight
                 node_id = i
@@ -230,9 +232,10 @@ class GraphAlgo(GraphAlgoInterface):
                     heapq.heappush(priority, (curr_w, Trio(dest, i)))
         return None
 
+
 # g = DiGraph()
 # algo = GraphAlgo(g)
-# algo.load_from_json("C:/Users/yanir/PycharmProjects/Weighted_Graph_Algorithms_Py/data/Test1.json")
+# algo.load_from_json("../data/Test1.json")
 # start_time = time.time()
 # print(algo.centerPoint())
 # print("--- %s seconds ---" % (time.time() - start_time))
