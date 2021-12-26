@@ -1,12 +1,12 @@
 from src.GraphInterface import GraphInterface
+from src.node_data import node_data
+import random as rnd
+
 
 # out edges <int dest,weight>
 # in edges <int source,weight>
 # position tuple
 # weight float
-from src.node_data import node_data
-
-
 class DiGraph(GraphInterface):
 
     def __init__(self):
@@ -47,7 +47,7 @@ class DiGraph(GraphInterface):
                 return True
         return False
 
-    def add_node(self, node_id: int, pos: tuple = None) -> bool:
+    def add_node(self, node_id: int, pos=(rnd.random(), rnd.random(), 0.0)) -> bool:
         if node_id not in self._nodes:
             added_node = node_data(node_id, pos)
             self._nodes[node_id] = added_node
@@ -75,12 +75,7 @@ class DiGraph(GraphInterface):
         return False
 
     def __repr__(self) -> str:
-        ans = """Graph: |V| = {}, |E| = {},
-        nodes_data:[\n\t {}]""".format(self.v_size(), self.e_size(), self.nodes())
+        ans = """Graph: |V|={}, |E|={},
+        {}""".format(self.v_size(), self.e_size(), self.nodes())
         return ans
 
-    def nodes_to_json(self):
-        nodes_list = []
-        for i in range(self.v_size()):
-            nodes_list.append(set[self.nodes().get(i).node_to_json()])
-        return dict["Nodes": nodes_list]

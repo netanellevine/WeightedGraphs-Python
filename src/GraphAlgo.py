@@ -1,10 +1,9 @@
-import math
 import heapq
-import random
-import time
-from typing import List
 import json
-
+import math
+import random
+from typing import List
+import matplotlib.pyplot as plt
 from src.DiGraph import DiGraph
 from src.GraphAlgoInterface import GraphAlgoInterface
 from src.GraphInterface import GraphInterface
@@ -59,17 +58,46 @@ class GraphAlgo(GraphAlgoInterface):
 
     def save_to_json(self, file_name: str) -> bool:
         try:
-            f = open(file_name, "x")
-            di = self.graph.nodes_to_json()
-            f.write(di)
-        except IOError:
+            with open(file_name, "w") as new_file:
+                new_file.write(json.dumps(self.parse_to_json(), indent=4))
+            new_file.close()
+            return True
+        except Exception as exp:
+            print(exp)
             return False
-        return True
+
+    def parse_to_json(self):
+        nodes_d = self.get_graph().get_all_v()
+        Nodes = []  # List of all the Nodes that will be added to the json file
+        Edges = []  # List of all the Edges that will be added to the json file
+        json_dict = {}
+        for node in nodes_d:  # Add each Node
+            curr_node_data = nodes_d.get(node)
+            curr_id = node
+            out_edges = self.get_graph().all_out_edges_of_node(curr_id)
+            for edge in out_edges.keys():   # Add each Edge
+                src = id
+                dest = edge
+                weight = out_edges.get(edge)
+                # change the format into a json format
+                curr_edge = {"src": src, "w": weight, "dest": dest}
+                Edges.append(curr_edge)
+            pos = curr_node_data.get_pos()
+            X = pos[0]
+            Y = pos[1]
+            Z = pos[2]
+            # change the format into a json format
+            curr_node_data = {"pos": (str(X) + "," + str(Y) + "," + str(Z)), "id": curr_id}
+            Nodes.append(curr_node_data)
+        json_dict = {"Edges": Edges, "Nodes": Nodes}   # Add all to main dict
+        # print("DICT:\n")
+        # print(json_dict)
+        return json_dict
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         di = self.djikstra_shortest(id1, id2)
         if di is None:
-            return 0, []
+            return float('inf'), []
         path = [id2]
         prev = di.get(id2).prev
         while path[0] != id1:
@@ -114,9 +142,9 @@ class GraphAlgo(GraphAlgoInterface):
             test = copy.__len__()
             if copy is not None and copy.__len__() >= node_lst.__len__():
                 cost = 0
-                for j in range(0, copy.__len__()-1):
+                for j in range(0, copy.__len__() - 1):
                     edges = self.graph.all_out_edges_of_node(copy[j])
-                    e = edges[copy[j+1]]
+                    e = edges[copy[j + 1]]
                     if e is None:
                         f = False
                         break
@@ -142,43 +170,64 @@ class GraphAlgo(GraphAlgoInterface):
         return node_id, Max
 
     def plot_graph(self) -> None:
+        X = []
+        Y = []
+        for n in self.get_graph().get_all_v().values():
+            X.append(n.get_pos()[0])
+            Y.append(n.get_pos()[1])
+        plt.plot(X, Y, 'ro')
+        # for i in range(len(X)):
+        #   # plt.annotate(i, xy=(int(X[i] * 0.999991), int(Y[i] * 1.000005)))
+        for curr_n in self.get_graph().get_all_v().keys():
+            if self.get_graph().all_out_edges_of_node(curr_n) is not None:
+                for edge in self.get_graph().all_out_edges_of_node(curr_n).keys():
+                    dest_x = self.get_graph().get_all_v().get(edge).get_pos()[0]
+                    dest_y = self.get_graph().get_all_v().get(edge).get_pos()[1]
+                    src_x = self.get_graph().get_all_v().get(curr_n).get_pos()[0]
+                    src_y = self.get_graph().get_all_v().get(curr_n).get_pos()[1]
+                    plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y), arrowprops={'arrowstyle': "<-", 'lw': 2})
+        plt.show()
         return None
 
-    def djikstra(self, src: int):
-        prio = []
+    def djikstra(self, src: int,flag=0):
+        priority = []
         di: {int, Father} = {}
         Max = 0
-        heapq.heappush(prio, (0, Trio(src, src)))
-        while len(di) < self.graph.v_size() and len(prio) > 0:
-            weig, trioT = heapq.heappop(prio)
+        heapq.heappush(priority, (0, Trio(src, src)))
+        while len(di) < self.graph.v_size() and len(priority) > 0:
+            weight, trioT = heapq.heappop(priority)
             dest = trioT.to
             if dest not in di.keys():
                 self.graph.all_in_edges_of_node(dest)
-                di[dest] = Father(trioT.prev, weig)
-                if weig > Max:
-                    Max = weig
+                di[dest] = Father(trioT.prev, weight)
+                if weight > Max:
+                    Max = weight
                 edges = self.graph.all_out_edges_of_node(dest)
                 for i in edges.keys():
-                    weight = edges.get(i) + weig
-                    heapq.heappush(prio, (weight, Trio(dest, i)))
+                    curr_w = edges.get(i) + weight
+                    heapq.heappush(priority, (curr_w, Trio(dest, i)))
+        if flag == 1:
+            if len(di) < self.graph.v_size():
+                return -1
+
         return Max
 
     def djikstra_shortest(self, src: int, des: int):
-        prio = []
+        priority = []
         di: {int, Father} = {}
-        heapq.heappush(prio, (0, Trio(src, src)))
-        while len(di) < self.graph.v_size() and len(prio) > 0:
-            weig, trioT = heapq.heappop(prio)
+        heapq.heappush(priority, (0, Trio(src, src)))
+        while len(di) < self.graph.v_size() and len(priority) > 0:
+            weight, trioT = heapq.heappop(priority)
             dest = trioT.to
             if dest not in di.keys():
                 self.graph.all_in_edges_of_node(dest)
-                di[dest] = Father(trioT.prev, weig)
+                di[dest] = Father(trioT.prev, weight)
                 edges = self.graph.all_out_edges_of_node(dest)
                 if des in di:
                     return di
                 for i in edges.keys():
-                    weight = edges.get(i) + weig
-                    heapq.heappush(prio, (weight, Trio(dest, i)))
+                    curr_w = edges.get(i) + weight
+                    heapq.heappush(priority, (curr_w, Trio(dest, i)))
         return None
 
 # g = DiGraph()

@@ -1,7 +1,9 @@
+import random as rnd
+
 
 class node_data:
 
-    def __init__(self, id: int, pos: tuple[float, float, float]):
+    def __init__(self, id: int, pos=(rnd.random(), rnd.random(), 0.0)):
         self._id: int = id
         self._in_edges: dict[int, float] = {}
         self._out_edges: dict[int, float] = {}
@@ -35,7 +37,7 @@ class node_data:
     def out_edges(self):
         return self._out_edges
 
-    def pos(self):
+    def get_pos(self):
         return self._pos
 
     def size(self):
@@ -44,27 +46,11 @@ class node_data:
     def id(self):
         return self._id
 
+    # def __repr__(self) -> str:
+    #     ans = """node_data ID: {}, pos: {},
+    #     edges_in: {},
+    #     edges_out: {},\n\t""".format(self._id, self._pos, len(self._in_edges), len(self._out_edges))
+    #     return ans
     def __repr__(self) -> str:
-        ans = """node_data ID: {}, pos: {},
-        edges_in: {},
-        edges_out: {},\n\t""".format(self._id, self._pos, len(self._in_edges), len(self._out_edges))
+        ans = """ID-{}: |edges_out|={}, |edges_in|={}""".format(self._id, len(self._out_edges), len(self._in_edges))
         return ans
-
-    def node_to_json(self):
-        pos_str = ""
-        for i in self._pos:
-            pos_str += str(i) + ","
-            # print(i)
-        return dict["pos": pos_str[:-1]], dict["id": self._id]
-
-    # def in_edges_str(self):
-    #     ans = "{"
-    #     for src, weight in self._in_edges:
-    #         ans += "{}: {},\n".format(src, weight)
-    #     return ans
-    #
-    # def out_edges_str(self):
-    #     ans = "{"
-    #     for dest, weight in self._out_edges:
-    #         ans += "{}: {},\n".format(dest, weight)
-    #     return ans
