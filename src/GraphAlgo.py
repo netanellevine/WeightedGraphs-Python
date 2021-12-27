@@ -32,8 +32,11 @@ def swap(j, i, li):
 
 class GraphAlgo(GraphAlgoInterface):
 
-    def __init__(self, graph: GraphInterface = DiGraph()):
-        self.graph = graph
+    def __init__(self, graph: GraphInterface = 1):
+        if graph !=1:
+            self.graph=graph
+        else:
+            self.graph = DiGraph()
 
     def get_graph(self) -> GraphInterface:
         return self.graph
@@ -52,6 +55,7 @@ class GraphAlgo(GraphAlgoInterface):
             edges = data["Edges"]
             for i in edges:
                 self.graph.add_edge(i["src"], i["dest"], (i["w"]))
+            f.close()
         except IOError:
             return False
         return True
@@ -139,7 +143,6 @@ class GraphAlgo(GraphAlgoInterface):
             copy = node_lst.copy()
             swap(0, i, copy)
             copy = self.find_route(copy)
-            test = copy.__len__()
             if copy is not None and copy.__len__() >= node_lst.__len__():
                 cost = 0
                 for j in range(0, copy.__len__() - 1):
