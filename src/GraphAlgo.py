@@ -4,9 +4,9 @@ import math
 import random
 from typing import List
 import matplotlib.pyplot as plt
-from src.DiGraph import DiGraph
-from src.GraphAlgoInterface import GraphAlgoInterface
-from src.GraphInterface import GraphInterface
+from . import DiGraph
+from . import GraphAlgoInterface
+from . import GraphInterface
 
 
 class Trio:
