@@ -7,7 +7,7 @@ class node_data:
         if pos != 1:
             self._pos: tuple[float, float, float] = pos
         else:
-            self._pos: tuple[float, float, float] = (rnd.random(), rnd.random(), 0.0)
+            self._pos: tuple[float, float, float] = (rnd.randint(0, 10), rnd.randint(0, 10), 0.0)
         self._id: int = id
         self._in_edges: dict[int, float] = {}
         self._out_edges: dict[int, float] = {}

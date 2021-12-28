@@ -5,7 +5,6 @@ import random
 from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
-
 from src.DiGraph import DiGraph
 from src.GraphAlgoInterface import GraphAlgoInterface
 from src.GraphInterface import GraphInterface
@@ -53,7 +52,7 @@ class GraphAlgo(GraphAlgoInterface):
                 try:
                     self.graph.add_node(i["id"], i["pos"].split(","))
                 except:
-                    self.graph.add_node(i["id"], (random.random(), random.random(), 0.0))
+                    self.graph.add_node(i["id"], (random.randint(0, 10), random.randint(0, 10), 0.0))
             edges = data["Edges"]
             for i in edges:
                 self.graph.add_edge(i["src"], i["dest"], (i["w"]))
@@ -76,7 +75,6 @@ class GraphAlgo(GraphAlgoInterface):
         nodes_d = self.get_graph().get_all_v()
         Nodes = []  # List of all the Nodes that will be added to the json file
         Edges = []  # List of all the Edges that will be added to the json file
-        json_dict = {}
         for node in nodes_d:  # Add each Node
             curr_node_data = nodes_d.get(node)
             curr_id = node
@@ -170,7 +168,7 @@ class GraphAlgo(GraphAlgoInterface):
         for i in self.graph.get_all_v().keys():
             weight = self.djikstra(i, 1)
             if weight == -1:
-                return (None, math.inf)
+                return None, math.inf
             if weight < Max:
                 Max = weight
                 node_id = i
@@ -180,24 +178,12 @@ class GraphAlgo(GraphAlgoInterface):
         X = []
         Y = []
         for n in self.get_graph().get_all_v().values():
-            x = X.append(n.get_pos()[0])
-            y = Y.append(n.get_pos()[1])
-            plt.text(n.get_pos()[0], n.get_pos()[1], str(n.id()), color="red", fontsize=12)
-        plt.plot(X, Y, marker="o", mfc='r', ms=8)
-        max_x = max(X)
-        max_y = max(Y)
-        min_x = min(X)
-        min_y = min(Y)
-        avg = int((max_x - min_x + 1)/10)
-        bar_x = np.arange(min_x, max_x, avg)
-        avg = int((max_x - min_x + 1) / 10)
-        bar_y = np.arange(min_y, max_y, avg)
-        plt.bar(bar_x)
-        plt.bar(bar_y)
-        i = 0
-        # for x, y in X, Y:
-        #     plt.annotate(i, xy=(int(float(x) * 0.999991), int(float(y) * 1.000005)))
-        #     plt.text(x, y, str(n.id()), color="red", fontsize=12)
+            x = n.get_pos()[0]
+            y = n.get_pos()[1]
+            X.append(n.get_pos()[0])
+            Y.append(n.get_pos()[1])
+            plt.plot(x, y, 'ro', markersize=6)
+            plt.text(x, y, f'{n.id()}', color="black", fontsize=8)
         for curr_n in self.get_graph().get_all_v().keys():
             if self.get_graph().all_out_edges_of_node(curr_n) is not None:
                 for edge in self.get_graph().all_out_edges_of_node(curr_n).keys():
@@ -207,24 +193,38 @@ class GraphAlgo(GraphAlgoInterface):
                     src_y = self.get_graph().get_all_v().get(curr_n).get_pos()[1]
                     plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y),
                                  arrowprops=dict(arrowstyle="<-", lw=1.5))
+        # px = math.ceil(float(max(X)))
+        # py = math.floor(float(min(X)))
+        # ppx = np.linspace(py, px, 20)
+        # plt.xticks(ppx)
+        # plt.margins(0.2)
+        # px = float(max(Y))
+        # py = float(min(Y))
+        # ppy = np.linspace(py, px, 10)
+        # plt.yticks(ppy)
+        plt.autoscale()
         plt.show()
         return None
 
     # def plot_graph(self) -> None:
-    #     i = 0
-    #     for src in self.get_graph().get_all_v().values():
-    #         x = src.get_pos()[0]
-    #         y = src.get_pos()[1]
-    #         z = int(float(x) * 0.999991)
-    #         a = int(float(y) * 1.000005)
-    #         plt.annotate(i, xy=(int(float(x) * 0.999991), int(float(y) * 1.000005)))
-    #         i += 1
-    #         plt.plot(x, y, "o-b")
-    #         plt.text(x , y , f'{src.id()}', bbox=dict(facecolor='red', alpha=0.3))
-    #         for dest, w in self.get_graph().all_out_edges_of_node(src.id()).items():
-    #             his_x = self.get_graph().get_all_v()[dest].get_pos()[0]
-    #             his_y = self.get_graph().get_all_v()[dest].get_pos()[1]
-    #             plt.annotate("", xy=(x, y), xytext=(his_x, his_y), arrowprops=dict(arrowstyle="<-"))
+    #     x = []
+    #     y = []
+    #     for node in self.get_graph().get_all_v().values():
+    #         x.append(node.get_pos()[0])
+    #         y.append(node.get_pos()[1])
+    #         plt.text(node.get_pos()[0], node.get_pos()[1], f'{node.id()}', color="black", fontsize=8)
+    #     plt.plot(x, y, 'ro')
+    #     # for i in range(len(x)):
+    #     #     plt.annotate(i, xy=(x[i] * 0.999991, y[i] * 1.000005))
+    #     for node_id in self.get_graph().get_all_v().keys():
+    #         if self.get_graph().all_out_edges_of_node(node_id) is not None:
+    #             for edge in self.get_graph().all_out_edges_of_node(node_id).keys():
+    #                 dest_x = self.get_graph().get_all_v().get(edge).get_pos()[0]
+    #                 dest_y = self.get_graph().get_all_v().get(edge).get_pos()[1]
+    #                 src_x = self.get_graph().get_all_v().get(node_id).get_pos()[0]
+    #                 src_y = self.get_graph().get_all_v().get(node_id).get_pos()[1]
+    #                 plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y),
+    #                              arrowprops={'arrowstyle': "<-", 'lw': 2})
     #     plt.show()
 
     def djikstra(self, src: int, flag=0):
