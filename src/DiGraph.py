@@ -1,5 +1,5 @@
-from src.GraphInterface import GraphInterface
-from src.node_data import node_data
+from GraphInterface import GraphInterface
+from node_data import node_data
 
 
 # out edges <int dest,weight>
