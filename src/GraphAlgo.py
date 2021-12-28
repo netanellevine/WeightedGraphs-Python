@@ -83,7 +83,7 @@ class GraphAlgo(GraphAlgoInterface):
         Saves a graph to a json file.
         """
         try:
-            with open(file_name, "w") as new_file:
+            with open(file_name, "x") as new_file:
                 new_file.write(json.dumps(self.parse_to_json(), indent=4))
             new_file.close()
             return True
