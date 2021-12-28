@@ -28,11 +28,11 @@ git clone https://github.com/yanir75/Weighted_Graph_Algorithms_Py.git && cd Weig
 ```
 install requirements
 ```
-pip install -r requirements.txt
+pip install -r requirements.txt && cd src
 ```
 Then run our main function which visualizes the graph.
 ```
-python src/main.py
+python main.py
 ```
 
 
