@@ -1,4 +1,6 @@
+import sys
 
+sys.path.append("..")
 
 from GraphInterface import GraphInterface
 from node_data import node_data

@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append("..")
 import heapq
 import json
 import math
