@@ -22,7 +22,6 @@ This can be used for a variety of purposes (best route between cities,routes etc
 ---
 
 ## How to use
-To be done soon
+To be done soon 
 
-## Check our wiki for further information
-<a href="https://github.com/yanir75/Weighted_Graph_Algorithms_Py/wiki">Project wiki</a>
+## <a href="https://github.com/yanir75/Weighted_Graph_Algorithms_Py/wiki">Check our wiki for further information</a>
