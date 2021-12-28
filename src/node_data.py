@@ -5,12 +5,12 @@ class node_data:
 
     def __init__(self, id: int, pos=1):
         if pos != 1:
-            self._pos: tuple[float, float, float] = pos
+            self._pos: (float, float, float) = (float(pos[0]), float(pos[1]), 0.0)
         else:
-            self._pos: tuple[float, float, float] = (rnd.randint(0, 10), rnd.randint(0, 10), 0.0)
+            self._pos: (float, float, float) = (rnd.randint(0, 10), rnd.randint(0, 10), 0.0)
         self._id: int = id
-        self._in_edges: dict[int, float] = {}
-        self._out_edges: dict[int, float] = {}
+        self._in_edges: {int, float} = {}
+        self._out_edges: {int, float} = {}
         self._size: int = 0
 
     def connect(self, src: int, dest: int, weight: float):

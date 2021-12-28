@@ -9,7 +9,7 @@ from src.node_data import node_data
 class DiGraph(GraphInterface):
 
     def __init__(self):
-        self._nodes: dict[int, node_data] = {}
+        self._nodes: {int, node_data} = {}
         self._mc: int = 0
         self._e_size: int = 0
 

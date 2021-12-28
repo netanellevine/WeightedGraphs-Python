@@ -4,7 +4,6 @@ import math
 import random
 from typing import List
 import matplotlib.pyplot as plt
-import numpy as np
 from src.DiGraph import DiGraph
 from src.GraphAlgoInterface import GraphAlgoInterface
 from src.GraphInterface import GraphInterface
@@ -12,6 +11,9 @@ from src.GraphInterface import GraphInterface
 
 class Trio:
     def __init__(self, prev: int, to: int):
+        """
+        This class is used in the priority queue to save the previous Node
+        """
         self.prev: int = prev
         self.to: int = to
 
@@ -21,11 +23,17 @@ class Trio:
 
 class Father:
     def __init__(self, prev: int, weight: float):
+        """
+        This class is used to save the previous node and current route weight
+        """
         self.prev: int = prev
         self.weight: float = weight
 
 
 def swap(j, i, li):
+    """
+    Swaps between two elements in a list
+    """
     tmp = li[j]
     li[j] = li[i]
     li[i] = tmp
@@ -34,15 +42,24 @@ def swap(j, i, li):
 class GraphAlgo(GraphAlgoInterface):
 
     def __init__(self, graph: GraphInterface = 1):
+        """
+        Initiates an algo
+        """
         if graph != 1:
             self.graph = graph
         else:
             self.graph = DiGraph()
 
     def get_graph(self) -> GraphInterface:
+        """
+        Returns the graph used in the algo
+        """
         return self.graph
 
     def load_from_json(self, file_name: str) -> bool:
+        """
+        Loads a graph from a json file and initiates it.
+        """
         self.graph = DiGraph()
         try:
             f = open(file_name)
@@ -62,6 +79,9 @@ class GraphAlgo(GraphAlgoInterface):
         return True
 
     def save_to_json(self, file_name: str) -> bool:
+        """
+        Saves a graph to a json file.
+        """
         try:
             with open(file_name, "w") as new_file:
                 new_file.write(json.dumps(self.parse_to_json(), indent=4))
@@ -72,6 +92,9 @@ class GraphAlgo(GraphAlgoInterface):
             return False
 
     def parse_to_json(self):
+        """
+        Parses a current graph information to a json string
+        """
         nodes_d = self.get_graph().get_all_v()
         Nodes = []  # List of all the Nodes that will be added to the json file
         Edges = []  # List of all the Edges that will be added to the json file
@@ -99,6 +122,12 @@ class GraphAlgo(GraphAlgoInterface):
         return json_dict
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
+        """
+        Shortest path between two nodes using heapq as our priority queue.
+        The priority queue compares the weight of two different routes and takes the fastest one.
+        This Node will be first to pop in our heapq.
+        We used dijikstra's algorithm.
+        """
         di = self.djikstra_shortest(id1, id2)
         if di is None:
             return float('inf'), []
@@ -110,6 +139,12 @@ class GraphAlgo(GraphAlgoInterface):
         return di.get(id2).weight, path
 
     def find_route(self, node_lst: List[int]):
+        """
+        Best route between a list. Our algorithm is pretty simple.
+        Shortest path dist between two first nodes in the list.
+        Then takes the third node if it exists in the path remove it otherwise find the best path to it.
+        Goes on and on until all the nodes are in the list or there isn't a route.
+        """
         TSPath: List[int] = []
         route = set()
         copy = node_lst.copy()
@@ -134,6 +169,11 @@ class GraphAlgo(GraphAlgoInterface):
         return TSPath  # ,cost
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
+        """
+        Using find_route to find the best route.
+        Switch some places and finds the best route again.
+        Does the best effort to find the most efficient route.
+        """
         if node_lst is None:
             return None
         f = True
@@ -163,6 +203,11 @@ class GraphAlgo(GraphAlgoInterface):
         return fin, Min
 
     def centerPoint(self) -> (int, float):
+        """
+        Uses dijikstra's algorithm to find the slowest route between a Node to another.
+        Comparing the slowest route of each node between all the nodes.
+        Returns the node with the fastest slowest route it could find.
+        """
         Max = math.inf
         node_id = 0
         for i in self.graph.get_all_v().keys():
@@ -175,6 +220,9 @@ class GraphAlgo(GraphAlgoInterface):
         return node_id, Max
 
     def plot_graph(self) -> None:
+        """
+        Using matplotlib to draw the graph.
+        """
         X = []
         Y = []
         for n in self.get_graph().get_all_v().values():
@@ -203,6 +251,7 @@ class GraphAlgo(GraphAlgoInterface):
         # ppy = np.linspace(py, px, 10)
         # plt.yticks(ppy)
         plt.autoscale()
+        plt.axis('off')
         plt.show()
         return None
 
@@ -228,6 +277,11 @@ class GraphAlgo(GraphAlgoInterface):
     #     plt.show()
 
     def djikstra(self, src: int, flag=0):
+        """
+        Dijikstra's algorithm explained in this video https://www.youtube.com/watch?v=CerlT7tTZfY
+        Flag 0 will return the fastest route to all the nodes it can reach.
+        Flag 1 will return -1 if the graph is not connected.
+        """
         priority = []
         di: {int, Father} = {}
         Max = 0
@@ -251,6 +305,11 @@ class GraphAlgo(GraphAlgoInterface):
         return Max
 
     def djikstra_shortest(self, src: int, des: int):
+        """
+        Dijikstra's algorithm https://www.youtube.com/watch?v=CerlT7tTZfY
+        This algorithm stops when it finds the destination it needed to reach.
+        Saves runtime of all the program.
+        """
         priority = []
         di: {int, Father} = {}
         heapq.heappush(priority, (0, Trio(src, src)))
@@ -268,9 +327,3 @@ class GraphAlgo(GraphAlgoInterface):
                     heapq.heappush(priority, (curr_w, Trio(dest, i)))
         return None
 
-# g = DiGraph()
-# algo = GraphAlgo(g)
-# algo.load_from_json("../data/Test1.json")
-# start_time = time.time()
-# print(algo.centerPoint())
-# print("--- %s seconds ---" % (time.time() - start_time))
