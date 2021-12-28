@@ -2,8 +2,17 @@ import random as rnd
 
 
 class node_data:
-
+    """
+    This class represents a Vertex in a Graph.
+    each Vertex keeps the next data:
+    1) ID -> index
+    2) in_edges -> dictionary of all the edges that this Vertex is their destination.
+    3) out_edges -> dictionary of all the edges that this Vertex is their source.
+    4) pos -> position of the Vertex in the dimension (X,Y,Z).
+    5) size -> how many edges (in and out) connect to this Vertex.
+    """
     def __init__(self, id: int, pos=1):
+        # if the user doesn't give a position the vertex gets a random one.
         if pos != 1:
             self._pos: (float, float, float) = (float(pos[0]), float(pos[1]), 0.0)
         else:
@@ -13,6 +22,7 @@ class node_data:
         self._out_edges: {int, float} = {}
         self._size: int = 0
 
+    # connect to nodes with edge.
     def connect(self, src: int, dest: int, weight: float):
         if src in self._in_edges:
             self._in_edges[src] = weight
@@ -25,14 +35,6 @@ class node_data:
 
     def get_out_edge(self, dest: int):
         return self._out_edges.get(dest)
-
-    def get_edge(self, src: int, dest: int):
-        if self.get_in_edge(src):
-            return self.get_in_edge(src), 1
-        elif self.get_out_edge(dest):
-            return self.get_out_edge(dest), -1
-        else:
-            return -2
 
     def in_edges(self):
         return self._in_edges
@@ -49,11 +51,6 @@ class node_data:
     def id(self):
         return self._id
 
-    # def __repr__(self) -> str:
-    #     ans = """node_data ID: {}, pos: {},
-    #     edges_in: {},
-    #     edges_out: {},\n\t""".format(self._id, self._pos, len(self._in_edges), len(self._out_edges))
-    #     return ans
     def __repr__(self) -> str:
         ans = """ID-{}: |edges_out|={}, |edges_in|={}""".format(self._id, len(self._out_edges), len(self._in_edges))
         return ans

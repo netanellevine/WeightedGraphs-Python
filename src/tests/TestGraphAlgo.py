@@ -1,8 +1,8 @@
+import sys
+sys.path.append("..")
 import math
 import unittest
 from typing import List
-
-from src.DiGraph import DiGraph
 from src.GraphAlgo import GraphAlgo
 
 

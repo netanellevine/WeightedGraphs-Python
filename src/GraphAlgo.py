@@ -1,3 +1,5 @@
+import sys
+sys.path.append("..")
 import heapq
 import json
 import math
@@ -223,18 +225,22 @@ class GraphAlgo(GraphAlgoInterface):
         """
         Using matplotlib to draw the graph.
         """
-        for n in self.get_graph().get_all_v().values():
-            x = n.get_pos()[0]
-            y = n.get_pos()[1]
+        G = self.get_graph()  # the Graph
+        V = self.get_graph().get_all_v()  # the Nodes
+        # draw each Node in the Graph and draw it's id.
+        for node in V.values():
+            x = node.get_pos()[0]
+            y = node.get_pos()[1]
             plt.plot(x, y, 'ro', markersize=6)
-            plt.text(x, y, f'{n.id()}', color="black", fontsize=8)
-        for curr_n in self.get_graph().get_all_v().keys():
-            if self.get_graph().all_out_edges_of_node(curr_n) is not None:
-                for edge in self.get_graph().all_out_edges_of_node(curr_n).keys():
-                    dest_x = self.get_graph().get_all_v().get(edge).get_pos()[0]
-                    dest_y = self.get_graph().get_all_v().get(edge).get_pos()[1]
-                    src_x = self.get_graph().get_all_v().get(curr_n).get_pos()[0]
-                    src_y = self.get_graph().get_all_v().get(curr_n).get_pos()[1]
+            plt.text(x, y, f'{node.id()}', color="black", fontsize=9)
+        # draw all the out edges of each Node in the Graph.
+        for curr_node in V.keys():
+            if G.all_out_edges_of_node(curr_node) is not None:
+                for curr_edge in G.all_out_edges_of_node(curr_node).keys():
+                    src_x = V.get(curr_node).get_pos()[0]
+                    dest_x = V.get(curr_edge).get_pos()[0]
+                    src_y = V.get(curr_node).get_pos()[1]
+                    dest_y = V.get(curr_edge).get_pos()[1]
                     plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y),
                                  arrowprops=dict(arrowstyle="<-", lw=1.5, color='0.2'))
         plt.autoscale()

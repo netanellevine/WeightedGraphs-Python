@@ -22,10 +22,10 @@ def check():
     (None, inf)
     ([1, 2, 3, 4], 4.5)
     """
-    # check0()
-    # check1()
+    check0()
+    check1()
     check2()
-    # check3()
+    check3()
 
 
 def check0():
