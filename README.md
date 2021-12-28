@@ -22,6 +22,7 @@ This can be used for a variety of purposes (best route between cities,routes etc
 ---
 
 ## How to use
-To be done soon 
+```
+
 
 ## <a href="https://github.com/yanir75/Weighted_Graph_Algorithms_Py/wiki">Check our wiki for further information</a>
