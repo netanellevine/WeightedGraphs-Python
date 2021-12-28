@@ -22,6 +22,17 @@ This can be used for a variety of purposes (best route between cities,routes etc
 ---
 
 ## How to use
+First we would like to clone the repository and cd into the directory
+```
+git clone https://github.com/yanir75/Weighted_Graph_Algorithms_Py.git && cd Weighted_Graph_Algorithms_Py
+```
+install requirements
+```
+pip install requirements.txt
+```
+Then run our main function which visualizes the graph.
+```
+python src/main.py
 ```
 
 
