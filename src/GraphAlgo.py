@@ -1,15 +1,12 @@
-import sys
-
-sys.path.append("..")
 import heapq
 import json
 import math
 import random
 from typing import List
 import matplotlib.pyplot as plt
-from DiGraph import DiGraph
-from GraphAlgoInterface import GraphAlgoInterface
-from GraphInterface import GraphInterface
+from src.DiGraph import DiGraph
+from src.GraphAlgoInterface import GraphAlgoInterface
+from src.GraphInterface import GraphInterface
 
 
 class Trio:
@@ -226,13 +223,9 @@ class GraphAlgo(GraphAlgoInterface):
         """
         Using matplotlib to draw the graph.
         """
-        X = []
-        Y = []
         for n in self.get_graph().get_all_v().values():
             x = n.get_pos()[0]
             y = n.get_pos()[1]
-            X.append(n.get_pos()[0])
-            Y.append(n.get_pos()[1])
             plt.plot(x, y, 'ro', markersize=6)
             plt.text(x, y, f'{n.id()}', color="black", fontsize=8)
         for curr_n in self.get_graph().get_all_v().keys():
@@ -243,41 +236,11 @@ class GraphAlgo(GraphAlgoInterface):
                     src_x = self.get_graph().get_all_v().get(curr_n).get_pos()[0]
                     src_y = self.get_graph().get_all_v().get(curr_n).get_pos()[1]
                     plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y),
-                                 arrowprops=dict(arrowstyle="<-", lw=1.5))
-        # px = math.ceil(float(max(X)))
-        # py = math.floor(float(min(X)))
-        # ppx = np.linspace(py, px, 20)
-        # plt.xticks(ppx)
-        # plt.margins(0.2)
-        # px = float(max(Y))
-        # py = float(min(Y))
-        # ppy = np.linspace(py, px, 10)
-        # plt.yticks(ppy)
+                                 arrowprops=dict(arrowstyle="<-", lw=1.5, color='0.2'))
         plt.autoscale()
-        plt.axis('off')
+        # plt.axis('off')
         plt.show()
         return None
-
-    # def plot_graph(self) -> None:
-    #     x = []
-    #     y = []
-    #     for node in self.get_graph().get_all_v().values():
-    #         x.append(node.get_pos()[0])
-    #         y.append(node.get_pos()[1])
-    #         plt.text(node.get_pos()[0], node.get_pos()[1], f'{node.id()}', color="black", fontsize=8)
-    #     plt.plot(x, y, 'ro')
-    #     # for i in range(len(x)):
-    #     #     plt.annotate(i, xy=(x[i] * 0.999991, y[i] * 1.000005))
-    #     for node_id in self.get_graph().get_all_v().keys():
-    #         if self.get_graph().all_out_edges_of_node(node_id) is not None:
-    #             for edge in self.get_graph().all_out_edges_of_node(node_id).keys():
-    #                 dest_x = self.get_graph().get_all_v().get(edge).get_pos()[0]
-    #                 dest_y = self.get_graph().get_all_v().get(edge).get_pos()[1]
-    #                 src_x = self.get_graph().get_all_v().get(node_id).get_pos()[0]
-    #                 src_y = self.get_graph().get_all_v().get(node_id).get_pos()[1]
-    #                 plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y),
-    #                              arrowprops={'arrowstyle': "<-", 'lw': 2})
-    #     plt.show()
 
     def djikstra(self, src: int, flag=0):
         """
