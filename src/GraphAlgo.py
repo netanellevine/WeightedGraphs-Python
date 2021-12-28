@@ -80,18 +80,18 @@ class GraphAlgo(GraphAlgoInterface):
             curr_id = node
             out_edges = self.get_graph().all_out_edges_of_node(curr_id)
             for edge in out_edges.keys():   # Add each Edge
-                src = id
+                src = curr_id
                 dest = edge
                 weight = out_edges.get(edge)
                 # change the format into a json format
                 curr_edge = {"src": src, "w": weight, "dest": dest}
                 Edges.append(curr_edge)
             pos = curr_node_data.get_pos()
-            X = pos[0]
-            Y = pos[1]
-            Z = pos[2]
+            X = str(pos[0])
+            Y = str(pos[1])
+            Z = str(pos[2])
             # change the format into a json format
-            curr_node_data = {"pos": (str(X) + "," + str(Y) + "," + str(Z)), "id": curr_id}
+            curr_node_data = {"pos": (X + "," + Y + "," + Z), "id": curr_id}
             Nodes.append(curr_node_data)
         json_dict = {"Edges": Edges, "Nodes": Nodes}   # Add all to main dict
         # print("DICT:\n")
@@ -174,25 +174,41 @@ class GraphAlgo(GraphAlgoInterface):
                 node_id = i
         return node_id, Max
 
+    # def plot_graph(self) -> None:
+    #     X = []
+    #     Y = []
+    #     for n in self.get_graph().get_all_v().values():
+    #         X.append(n.get_pos()[0])
+    #         Y.append(n.get_pos()[1])
+    #     plt.plot(X, Y, 'ro')
+    #     # for i in range(len(X)):
+    #     #   # plt.annotate(i, xy=(int(X[i] * 0.999991), int(Y[i] * 1.000005)))
+    #     for curr_n in self.get_graph().get_all_v().keys():
+    #         if self.get_graph().all_out_edges_of_node(curr_n) is not None:
+    #             for edge in self.get_graph().all_out_edges_of_node(curr_n).keys():
+    #                 dest_x = self.get_graph().get_all_v().get(edge).get_pos()[0]
+    #                 dest_y = self.get_graph().get_all_v().get(edge).get_pos()[1]
+    #                 src_x = self.get_graph().get_all_v().get(curr_n).get_pos()[0]
+    #                 src_y = self.get_graph().get_all_v().get(curr_n).get_pos()[1]
+    #                 plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y), arrowprops={'arrowstyle': "<-", 'lw': 2})
+    #     plt.show()
+    #     return None
     def plot_graph(self) -> None:
-        X = []
-        Y = []
-        for n in self.get_graph().get_all_v().values():
-            X.append(n.get_pos()[0])
-            Y.append(n.get_pos()[1])
-        plt.plot(X, Y, 'ro')
-        # for i in range(len(X)):
-        #   # plt.annotate(i, xy=(int(X[i] * 0.999991), int(Y[i] * 1.000005)))
-        for curr_n in self.get_graph().get_all_v().keys():
-            if self.get_graph().all_out_edges_of_node(curr_n) is not None:
-                for edge in self.get_graph().all_out_edges_of_node(curr_n).keys():
-                    dest_x = self.get_graph().get_all_v().get(edge).get_pos()[0]
-                    dest_y = self.get_graph().get_all_v().get(edge).get_pos()[1]
-                    src_x = self.get_graph().get_all_v().get(curr_n).get_pos()[0]
-                    src_y = self.get_graph().get_all_v().get(curr_n).get_pos()[1]
-                    plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y), arrowprops={'arrowstyle': "<-", 'lw': 2})
+        i = 0
+        for src in self.get_graph().get_all_v().values():
+            x = src.get_pos()[0]
+            y = src.get_pos()[1]
+            z = int(float(x) * 0.999991)
+            a = int(float(y) * 1.000005)
+            plt.annotate(i, xy=(z, a))
+            i += 1
+            plt.plot(x, y, "o-b")
+            plt.text(x , y , f'{src.id()}', bbox=dict(facecolor='red', alpha=0.3))
+            for dest, w in self.get_graph().all_out_edges_of_node(src.id()).items():
+                his_x = self.get_graph().get_all_v()[dest].get_pos()[0]
+                his_y = self.get_graph().get_all_v()[dest].get_pos()[1]
+                plt.annotate("", xy=(x, y), xytext=(his_x, his_y), arrowprops=dict(arrowstyle="<-"))
         plt.show()
-        return None
 
     def djikstra(self, src: int,flag=0):
         priority = []

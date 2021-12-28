@@ -1,6 +1,5 @@
 from src.GraphInterface import GraphInterface
 from src.node_data import node_data
-import random as rnd
 
 
 # out edges <int dest,weight>
@@ -47,7 +46,7 @@ class DiGraph(GraphInterface):
                 return True
         return False
 
-    def add_node(self, node_id: int, pos=(rnd.random(), rnd.random(), 0.0)) -> bool:
+    def add_node(self, node_id: int, pos=1) -> bool:
         if node_id not in self._nodes:
             added_node = node_data(node_id, pos)
             self._nodes[node_id] = added_node

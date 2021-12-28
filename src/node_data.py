@@ -3,11 +3,14 @@ import random as rnd
 
 class node_data:
 
-    def __init__(self, id: int, pos=(rnd.random(), rnd.random(), 0.0)):
+    def __init__(self, id: int, pos=1):
+        if pos != 1:
+            self._pos: tuple[float, float, float] = pos
+        else:
+            self._pos: tuple[float, float, float] = (rnd.random(), rnd.random(), 0.0)
         self._id: int = id
         self._in_edges: dict[int, float] = {}
         self._out_edges: dict[int, float] = {}
-        self._pos: tuple[float, float, float] = pos
         self._size: int = 0
 
     def connect(self, src: int, dest: int, weight: float):
