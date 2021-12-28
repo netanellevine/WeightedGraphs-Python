@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append(".")
+sys.path.append("..")
 from DiGraph import DiGraph
 from GraphAlgo import GraphAlgo
 
