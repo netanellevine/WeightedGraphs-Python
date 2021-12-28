@@ -1,12 +1,15 @@
+import sys
+
+sys.path.append("..")
 import heapq
 import json
 import math
 import random
 from typing import List
 import matplotlib.pyplot as plt
-from src.DiGraph import DiGraph
-from src.GraphAlgoInterface import GraphAlgoInterface
-from src.GraphInterface import GraphInterface
+from DiGraph import DiGraph
+from GraphAlgoInterface import GraphAlgoInterface
+from GraphInterface import GraphInterface
 
 
 class Trio:
@@ -326,4 +329,3 @@ class GraphAlgo(GraphAlgoInterface):
                     curr_w = edges.get(i) + weight
                     heapq.heappush(priority, (curr_w, Trio(dest, i)))
         return None
-
