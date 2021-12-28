@@ -64,7 +64,7 @@ class TestDiGraph(unittest.TestCase):
         self.assertTrue(self.g3.e_size() == 100 * 10)  # 1K edges
         self.assertTrue(self.g4.e_size() == 5000 * 15)  # 75K edges!
         self.assertTrue(self.g5.e_size() == 150000 * 20)  # 3M edges!!!
-        self.assertTrue(self.g6.e_size() == 5000000 * 20)  # 100M EDGES!!!!!
+        self.assertTrue(self.g6.e_size() == 5000000 * 20)  # 100M EDGES!!!!! took about 6 min
 
     def test_get_all_v(self):
         self.assertTrue(self.g1.get_all_v() == self.g1.nodes())
