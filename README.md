@@ -32,7 +32,7 @@ pip install -r requirements.txt
 ```
 Then run our main function which visualizes the graph.
 ```
-python src/main.py
+cd src && python src/main.py
 ```
 
 
