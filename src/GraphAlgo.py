@@ -1,6 +1,3 @@
-import sys
-
-sys.path.append("..")
 import heapq
 import json
 import math
@@ -329,3 +326,4 @@ class GraphAlgo(GraphAlgoInterface):
                     curr_w = edges.get(i) + weight
                     heapq.heappush(priority, (curr_w, Trio(dest, i)))
         return None
+

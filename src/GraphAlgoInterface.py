@@ -1,6 +1,4 @@
-import sys
 
-sys.path.append(".")
 from typing import List
 
 from src import GraphInterface
