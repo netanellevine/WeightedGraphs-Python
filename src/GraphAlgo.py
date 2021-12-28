@@ -4,6 +4,8 @@ import math
 import random
 from typing import List
 import matplotlib.pyplot as plt
+import numpy as np
+
 from src.DiGraph import DiGraph
 from src.GraphAlgoInterface import GraphAlgoInterface
 from src.GraphInterface import GraphInterface
@@ -178,11 +180,24 @@ class GraphAlgo(GraphAlgoInterface):
         X = []
         Y = []
         for n in self.get_graph().get_all_v().values():
-            X.append(n.get_pos()[0])
-            Y.append(n.get_pos()[1])
-        plt.plot(X, Y, marker="o", mfc='r', ms=10)
-        for i in range(len(X)):
-            plt.annotate(i, xy=(int(X[i] * 0.999991), int(Y[i] * 1.000005)))
+            x = X.append(n.get_pos()[0])
+            y = Y.append(n.get_pos()[1])
+            plt.text(n.get_pos()[0], n.get_pos()[1], str(n.id()), color="red", fontsize=12)
+        plt.plot(X, Y, marker="o", mfc='r', ms=8)
+        max_x = max(X)
+        max_y = max(Y)
+        min_x = min(X)
+        min_y = min(Y)
+        avg = int((max_x - min_x + 1)/10)
+        bar_x = np.arange(min_x, max_x, avg)
+        avg = int((max_x - min_x + 1) / 10)
+        bar_y = np.arange(min_y, max_y, avg)
+        plt.bar(bar_x)
+        plt.bar(bar_y)
+        i = 0
+        # for x, y in X, Y:
+        #     plt.annotate(i, xy=(int(float(x) * 0.999991), int(float(y) * 1.000005)))
+        #     plt.text(x, y, str(n.id()), color="red", fontsize=12)
         for curr_n in self.get_graph().get_all_v().keys():
             if self.get_graph().all_out_edges_of_node(curr_n) is not None:
                 for edge in self.get_graph().all_out_edges_of_node(curr_n).keys():
@@ -191,7 +206,7 @@ class GraphAlgo(GraphAlgoInterface):
                     src_x = self.get_graph().get_all_v().get(curr_n).get_pos()[0]
                     src_y = self.get_graph().get_all_v().get(curr_n).get_pos()[1]
                     plt.annotate("", xy=(src_x, src_y), xytext=(dest_x, dest_y),
-                                 arrowprops={'arrowstyle': "<-", 'lw': 1.2})
+                                 arrowprops=dict(arrowstyle="<-", lw=1.5))
         plt.show()
         return None
 
