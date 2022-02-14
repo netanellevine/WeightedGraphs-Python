@@ -40,4 +40,4 @@ python main.py
 ```
 
 
-## <a href="https://github.com/yanir75/Weighted_Graph_Algorithms_Py/wiki">Check our wiki for further information</a>
+## <a href="https://github.com/yanir75/Python-Weighted-Graphs/wiki">Check our wiki for further information</a>
